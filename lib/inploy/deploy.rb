@@ -15,12 +15,7 @@ module Inploy
     end
 
     def remote_setup
-      if branch.eql? "master"
-        checkout = ""
-      else
-        checkout = "&& $($(git branch | grep -vq #{branch}) && git checkout -f -b #{branch} origin/#{branch})"
-      end
-      remote_run "cd #{path} && git clone --depth 1 #{repository} #{application} && cd #{application} #{checkout} && rake inploy:local:setup environment=#{environment}"
+      remote_run "cd #{path} && git clone -n --depth 1 #{repository} #{application} && cd #{application} && git checkout -f -b #{branch} origin/#{branch} && rake inploy:local:setup environment=#{environment}"
     end
 
     def local_setup

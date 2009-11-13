@@ -3,12 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe Inploy::Deploy do
 
   def expect_setup_with(branch, environment = 'production')
-    if branch.eql? 'master'
-      checkout = ""
-    else
-      checkout = "&& $($(git branch | grep -vq #{branch}) && git checkout -f -b #{branch} origin/#{branch})"
-    end
-    expect_command "ssh #{@ssh_opts} #{@user}@#{@host} 'cd #{@path} && git clone --depth 1 #{@repository} #{@application} && cd #{@application} #{checkout} && rake inploy:local:setup environment=#{environment}'"
+    expect_command "ssh #{@ssh_opts} #{@user}@#{@host} 'cd #{@path} && git clone -n --depth 1 #{@repository} #{@application} && cd #{@application} && git checkout -f -b #{branch} origin/#{branch} && rake inploy:local:setup environment=#{environment}'"
   end
 
   def setup(subject)
